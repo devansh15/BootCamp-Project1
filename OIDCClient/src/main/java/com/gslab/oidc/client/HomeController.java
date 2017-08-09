@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Enumeration;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -21,8 +22,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.gslab.oidc.model.ClientRegistration;
 
 @Controller
 
@@ -41,19 +46,23 @@ public class HomeController {
 	private String tokenUrl = null;
 
 	@RequestMapping(value = "/")
-	@ResponseBody
 	public String home() {
 
-		return "<a href=\"/auth\">login</a>";
+		return "index";
 	}
 
-	@RequestMapping(value = "/OIDCClient")
-	public String authenticate(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	@RequestMapping(value = "/startOAuth", method=RequestMethod.POST)
+	/*public String authenticate(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {*/
+	public String authenticate() throws ServletException, IOException {
 		System.out.println("HI am i being called");
+		//System.out.println("clientId" + request.getParameter("dataString"));
+		//System.out.println("client = "+clientRegistration.getClientId());
+		
+	/*	
 		String accessToken = (String) request.getSession().getAttribute(ACCESS_TOKEN);
 
-		if (accessToken == null) {
+		if (accessToken == null) {*/
 
 			try {
 				authUrl = environment + "/services/oauth2/authorize?response_type=code&client_id=" + clientId
@@ -63,9 +72,9 @@ public class HomeController {
 			}
 
 			return "redirect:" + authUrl;
-		} else {
+		/*} else {
 			return "redirect:/OIDCClient/_callback";
-		}
+		}*/
 	}
 
 	@RequestMapping(value = "/OIDCClient/_callback")

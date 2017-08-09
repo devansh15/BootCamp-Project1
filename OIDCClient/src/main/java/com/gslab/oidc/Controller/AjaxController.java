@@ -1,19 +1,14 @@
 package com.gslab.oidc.Controller;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import javax.annotation.PostConstruct;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.gslab.oidc.jsonViews.Views;
-import com.gslab.oidc.model.AjaxResponseBody;
 import com.gslab.oidc.model.ClientRegistration;
 import com.gslab.oidc.model.User;
 
@@ -29,7 +24,7 @@ public class AjaxController {
 	// mapped by field name.
 	// @JsonView(Views.Public.class) - Optional, filters json data to display.
 	@JsonView(Views.Public.class)
-	@RequestMapping(value = "/OIDCClient")
+	@RequestMapping(value = "/OIDCClient1")
 	public String getSearchResultViaAjax(@RequestBody ClientRegistration search) {
 		System.out.println("Client Id : " + search.getClientId());
 
