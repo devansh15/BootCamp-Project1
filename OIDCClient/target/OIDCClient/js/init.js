@@ -34,10 +34,11 @@ $(document)
 											alert("Please Fill All Fields");
 										} else {
 											// AJAX Code To Submit Form.
+											console.log('${home}');
 											$
 													.ajax({
 														type : "POST",
-														url : "/OIDCClient",
+														url : "${home}OIDCClient",
 														contentType : 'application/json; charset=utf-8',
 														dataType : 'json',
 														data : JSON
