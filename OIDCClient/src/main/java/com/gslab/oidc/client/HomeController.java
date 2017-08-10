@@ -4,13 +4,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Enumeration;
+//import java.util.Enumeration;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpStatus;
@@ -27,35 +28,53 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import com.gslab.oidc.jsonViews.Views;
 import com.gslab.oidc.model.ClientRegistration;
 
 @Controller
-
 public class HomeController {
 	private static final String ACCESS_TOKEN = "ACCESS_TOKEN";
 	private static final String INSTANCE_URL = "INSTANCE_URL";
 
 	// clientId is 'Consumer Key' in the Remote Access UI
-	private static String clientId = "";
+	private String clientId = "3MVG9d8..z.hDcPLns0FEP7vMhKsiVdeOtmS_MlAA8xp3n7p.LvSmSG8Kz56bCFwWsv0sGlCfkePHXs8BqvC5";
 	// clientSecret is 'Consumer Secret' in the Remote Access UI
-	private static String clientSecret = "";
+	private String clientSecret = "3317252097875906329";
 	// This must be identical to 'Callback URL' in the Remote Access UI
-	private static String redirectUri = "https://localhost:8443/OIDCClient/_callback";
-	private static String environment = "https://login.salesforce.com";
+	private String redirectUri = "https://localhost:8443/OIDCClient/startOAuth/_callback";
+	private String environment = "https://login.salesforce.com";
 	private String authUrl = null;
 	private String tokenUrl = null;
+	private String userIdToken= null;
+	String sessionStr="";
 
 	@RequestMapping(value = "/")
 	public String home() {
 
-		return "index";
+		return "Welcome";
 	}
-
-	@RequestMapping(value = "/startOAuth", method=RequestMethod.POST)
 	/*public String authenticate(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {*/
-	public String authenticate() throws ServletException, IOException {
+	throws ServletException, IOException {*/
+	@JsonView(Views.Public.class)
+	@RequestMapping(value = "/startOAuth", method=RequestMethod.POST , consumes={"application/json"})
+	public String authenticate(@RequestBody ClientRegistration clientRegistration, HttpSession session) throws ServletException, IOException {
 		System.out.println("HI am i being called");
+		System.out.println("hello java");
+		System.out.println("Client Id : " + clientRegistration.getClientId());
+		System.out.println("Client secret : " + clientRegistration.getClientSecret());
+		System.out.println("Scope : " + clientRegistration.getScope());
+		System.out.println("Authorization_Code_Flow : " + clientRegistration.getAuthorizationCodeFlow());
+		
+		session.setAttribute(sessionStr, clientRegistration);
+		ClientRegistration cR = (ClientRegistration) session.getAttribute(sessionStr);
+		System.out.println(cR.getClientId());
+		System.out.println(cR.getClientSecret());
+		System.out.println(cR.getScope());
+		System.out.println(cR.getAuthorizationCodeFlow());
+		//Store the above values in session
+
+		
 		//System.out.println("clientId" + request.getParameter("dataString"));
 		//System.out.println("client = "+clientRegistration.getClientId());
 		
@@ -65,19 +84,20 @@ public class HomeController {
 		if (accessToken == null) {*/
 
 			try {
-				authUrl = environment + "/services/oauth2/authorize?response_type=code&client_id=" + clientId
+				authUrl = environment + "/services/oauth2/authorize?response_type=code&scope=openid&client_id=" + cR.getClientId()
 						+ "&redirect_uri=" + URLEncoder.encode(redirectUri, "UTF-8");
 			} catch (UnsupportedEncodingException e) {
 				throw new ServletException(e);
 			}
 
-			return "redirect:" + authUrl;
+			//return "redirect:" + authUrl;
+			return "Success";
 		/*} else {
-			return "redirect:/OIDCClient/_callback";
+			return "redirect:/startOAuth/_callback";
 		}*/
 	}
 
-	@RequestMapping(value = "/OIDCClient/_callback")
+	@RequestMapping(value = "/startOAuth/_callback")
 	@ResponseBody
 	public String authenticateCallback(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -109,6 +129,16 @@ public class HomeController {
 
 					accessToken = authResponse.getString("access_token");
 					instanceUrl = authResponse.getString("instance_url");
+					userIdToken = authResponse.getString("id_token");
+					
+					System.out.println("Acess Token Acquired" + accessToken);
+					System.out.println("ID Token =" + userIdToken);
+					
+					String[] idTokenFields = userIdToken.split("\\.");
+					byte[] idTokenHeaderBytes = idTokenFields[1].getBytes(); 
+					// Decoding id_token.
+					System.out.println("ID Token header = " + new String(Base64.decodeBase64(idTokenHeaderBytes)));
+					//System.out.println("ID Token Payload = " + new String(Base64.decodeBase64(userIdToken.split("\\.")[1])));
 
 				} catch (JSONException e) {
 					e.printStackTrace();

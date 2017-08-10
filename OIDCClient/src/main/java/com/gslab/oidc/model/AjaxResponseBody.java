@@ -15,5 +15,28 @@ public class AjaxResponseBody {
 		@JsonView(Views.Public.class)
 		List<User> result;
 
-		//getters and setters
+		public String getMsg() {
+			return msg;
+		}
+
+		public void setMsg(String msg) {
+			this.msg = msg;
+		}
+
+		public String getCode() {
+			return code;
+		}
+
+		public void setCode(String code) {
+			this.code = code;
+		}
+
+		public List<User> getResult() {
+			return result;
+		}
+
+		public void setResult(List<User> result) {
+			this.result = result;
+		}
+
 	}

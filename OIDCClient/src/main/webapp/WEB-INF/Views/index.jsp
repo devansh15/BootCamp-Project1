@@ -59,8 +59,8 @@
 				method="post">--%>
 				Client ID:<br> <input type="text" id="clientId"><br>
 				Client Secret:<br> <input type="text" id="clientsecret"><br>
-				Scope:<br> <input type="text" id="scope"><br> Code
-				Flow:<br> <select id="Authorization_Code_Flow">
+				Scope:<br> <input type="text" id="scope"><br> 
+				Code Flow:<br> <select id="Authorization_Code_Flow">
 					<option value="Authorization_Code_Flow">Authorization Code
 						Flow</option>
 				</select><br> <input id="submit" type="submit" value="Submit">
@@ -116,35 +116,32 @@
 												// message when the entered information
 												// is stored in database.
 												// alert("HERE");
-												var dataString = {
+												/*var dataString = {
 													clientId : ClientId,
 													clientsecret : Clientsecret,
 													scope : Scope,
 													authorization_Code_Flow : Authorization_Code_Flow
-												}
+												}*/
 												
-												var search = {}
-												search["clientId"] = $("#clientId").val();
-												search["clientsecret"] = $("#clientsecret").val();
+												var dataString = {}
+												dataString["clientId"] = $("#clientId").val();
+												dataString["clientsecret"] = $("#clientsecret").val();
+												dataString["scope"] = $("#scope").val();
+												dataString["authorization_Code_Flow"] = $("#authorization_Code_Flow").val();
 												
-												console.log(search);
-												console.log(JSON.stringify(search));
-												console.log("dataString ="
-														+ dataString);
-												console
-														.log("dataStringJson"
-																+ JSON
-																		.stringify(dataString));
-												// alert(JSON.stringify(dataString));
+												console.log(dataString);
+												console.log(JSON.stringify(dataString));
+												console.log("dataString ="+ dataString);
+												console.log("dataStringJson"+ JSON.stringify(dataString));
 												if (ClientId == ''
 														|| Clientsecret == ''
 														|| Scope == ''
 														|| Authorization_Code_Flow == '') {
 													alert("Please Fill All Fields");
 												} else {
-													// AJAX Code To Submit Form.
+													
 													console.log('${home}');
-													$.post("${pageContext.request.contextPath}/startOAuth", function(){
+													/*  $.post("${pageContext.request.contextPath}/startOAuth", function(){
 														
 													}).done(function(response) {
 														console.log(response);
@@ -153,29 +150,25 @@
 														console.log(jqXHR.responseText);
 														console.log(textStatus);
 														console.log(errorThrown);
-													}); 
-													/* $
-															.ajax({
+													}); */ 
+													// AJAX Code To Submit Form.
+													$.ajax({
 																type : "POST",
-																url : "${pageContext.request.contextPath}/startOAuth",
-																contentType : 'application/json; charset=utf-8',
+																url : "${home}startOAuth",
+																contentType : 'application/json;charset=utf-8',
 																dataType : 'json',
 																data : JSON.stringify(search),
 																cache : false,
-																success : function(
-																		result) {
+																success : function(result) {
+																	console.log("SUCCESS: ", result);
 																	alert(result);
 																},
-																error : function(
-																		jqXHR,
-																		textStatus,
-																		errorThrown) {
-																	console
-																			.log(textStatus);
-																	console
-																			.log(errorThrown);
+																error : function(jqXHR,textStatus,errorThrown) {
+																	//console.log("ERROR: ", errorThrown);
+																	console.log(textStatus);
+																	console.log(errorThrown);
 																}
-															}); */
+															}); 
 												}
 												return false;
 											});

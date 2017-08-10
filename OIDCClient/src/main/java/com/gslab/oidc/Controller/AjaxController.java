@@ -2,18 +2,19 @@ package com.gslab.oidc.Controller;
 
 import java.util.List;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
+//import org.springframework.stereotype.Controller;
+//import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
+//import com.gslab.oidc.model.AjaxResponseBody;
 import com.gslab.oidc.jsonViews.Views;
 import com.gslab.oidc.model.ClientRegistration;
 import com.gslab.oidc.model.User;
 
-@Controller
-
+@RestController
 public class AjaxController {
 
 	List<User> clients;
@@ -25,42 +26,50 @@ public class AjaxController {
 	// @JsonView(Views.Public.class) - Optional, filters json data to display.
 	@JsonView(Views.Public.class)
 	@RequestMapping(value = "/OIDCClient1")
-	public String getSearchResultViaAjax(@RequestBody ClientRegistration search) {
-		System.out.println("Client Id : " + search.getClientId());
+	public static String getSearchResultViaAjax(@RequestBody ClientRegistration clientRegistration) {
+		System.out.println("HI am i being called");
+		System.out.println("hello java");
+		System.out.println("Client Id : " + clientRegistration.getClientId());
+		System.out.println("Clientsecret : " + clientRegistration.getClientSecret());
+		System.out.println("Scope : " + clientRegistration.getScope());
+		System.out.println("Authorization_Code_Flow : " + clientRegistration.getAuthorizationCodeFlow());
+/*
+		AjaxResponseBody result = new AjaxResponseBody();
 
-		//AjaxResponseBody result = new AjaxResponseBody();
+		if (isValidClientRegistration(clientRegistration)) {
+			List<User> users = findByUserNameOrEmail(clientRegistration.getUsername(), clientRegistration.getEmail());
 
-		/*
-		 * if (isValidClientRegistration(search)) { List<User> clients =
-		 * findByUserNameOrEmail(search.getUsername(), search.getEmail());
-		 * 
-		 * if (clients.size() > 0) { result.setCode("200"); result.setMsg("");
-		 * result.setResult(clients); } else { result.setCode("204");
-		 * result.setMsg("No user!"); }
-		 * 
-		 * } else { result.setCode("400");
-		 * result.setMsg("Search criteria is empty!"); }
-		 */
+			if (users.size() > 0) {
+				result.setCode("200");
+				result.setMsg("");
+				result.setResult(users);
+			} else {
+				result.setCode("204");
+				result.setMsg("No user!");
+			}
 
-		// AjaxResponseBody will be converted into json format and send back to
-		// the request.
-		return "Success";
-
-	}
-
-	private boolean isValidClientRegistration(ClientRegistration search) {
+		} else {
+			result.setCode("400");
+			result.setMsg("Search criteria is empty!");
+		}
+*/
+		//AjaxResponseBody will be converted into json format and send back to the request.
+		return "result";
+} 
+/*
+	private boolean isValidClientRegistration(ClientRegistration clientRegistration) {
 
 		boolean valid = true;
 
-		if (search == null) {
+		if (clientRegistration == null) {
 			valid = false;
 		}
 
-		if ((StringUtils.isEmpty(search.getClientId())) && (StringUtils.isEmpty(search.getClientsecret()))) {
+		if ((StringUtils.isEmpty(clientRegistration.getClientId())) && (StringUtils.isEmpty(clientRegistration.getClientsecret()))) {
 			valid = false;
 		}
 
-		return valid;
+		return valid;*/
 
 		// Init some clients for testing
 		/*
@@ -98,6 +107,6 @@ public class AjaxController {
 		 * { result.add(user); continue; } }
 		 * 
 		 * }
-		 */
-	}
+		 
+	}*/
 }

@@ -1,35 +1,41 @@
 package com.gslab.oidc.model;
 
 public class ClientRegistration {
-	String ClientId;
-	String Clientsecret;
-	String Scope;
-	String Authorization_Code_Flow;
+	private String clientId;
+	private String clientSecret;
+	private String scope;
+	private String authorizationCodeFlow;
+
 	public String getClientId() {
-		return ClientId;
+		return clientId;
 	}
+
 	public void setClientId(String clientId) {
-		ClientId = clientId;
+		this.clientId = clientId;
 	}
-	public String getClientsecret() {
-		return Clientsecret;
+
+	public String getClientSecret() {
+		return clientSecret;
 	}
-	public void setClientsecret(String clientsecret) {
-		Clientsecret = clientsecret;
+
+	public void setClientSecret(String clientSecret) {
+		this.clientSecret = clientSecret;
 	}
+
 	public String getScope() {
-		return Scope;
+		return scope;
 	}
+
 	public void setScope(String scope) {
-		Scope = scope;
+		this.scope = scope;
 	}
-	public String getAuthorization_Code_Flow() {
-		return Authorization_Code_Flow;
+
+	public String getAuthorizationCodeFlow() {
+		return authorizationCodeFlow;
 	}
-	public void setAuthorization_Code_Flow(String authorization_Code_Flow) {
-		Authorization_Code_Flow = authorization_Code_Flow;
+
+	public void setAuthorizationCodeFlow(String authorizationCodeFlow) {
+		this.authorizationCodeFlow = authorizationCodeFlow;
 	}
-	
-	
 
 }
