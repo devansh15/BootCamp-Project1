@@ -5,9 +5,18 @@ import com.gslab.oidc.jsonViews.Views;
 
 public class User {
 	@JsonView(Views.Public.class)
+	String authorizationTokenEndpoint;
+	
+	@JsonView(Views.Public.class)
+	String tokenEndpoint;
+	
+	@JsonView(Views.Public.class)
+	String tokenKeysEndpoint;
+	
+	@JsonView(Views.Public.class)
 	String clientId;
 
-	@JsonView(Views.Public.class)
+	//@JsonView(Views.Public.class)
 	String clientSecret;
 
 	@JsonView(Views.Public.class)
@@ -15,6 +24,30 @@ public class User {
 
 	@JsonView(Views.Public.class)
 	String authorizationCodeFlow;
+
+	public String getAuthorizationTokenEndpoint() {
+		return authorizationTokenEndpoint;
+	}
+
+	public void setAuthorizationTokenEndpoint(String authorizationTokenEndpoint) {
+		this.authorizationTokenEndpoint = authorizationTokenEndpoint;
+	}
+
+	public String getTokenEndpoint() {
+		return tokenEndpoint;
+	}
+
+	public void setTokenEndpoint(String tokenEndpoint) {
+		this.tokenEndpoint = tokenEndpoint;
+	}
+
+	public String getTokenKeysEndpoint() {
+		return tokenKeysEndpoint;
+	}
+
+	public void setTokenKeysEndpoint(String tokenKeysEndpoint) {
+		this.tokenKeysEndpoint = tokenKeysEndpoint;
+	}
 
 	public String getClientId() {
 		return clientId;
@@ -48,4 +81,4 @@ public class User {
 		this.authorizationCodeFlow = authorizationCodeFlow;
 	}
 
-}
+	}

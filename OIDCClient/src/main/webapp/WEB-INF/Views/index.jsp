@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <style>
 /* The Modal (background) */
 .modal {
@@ -57,6 +58,9 @@
 			<span class="close">&times;</span>
 			<form> <%-- action="${pageContext.request.contextPath}/OIDCClient" 
 				method="post">--%>
+				Authorization Token Endpoint:<br> <input type ="text" id ="authorizationTokenEndpoint"><br>
+				Token Endpoint:<br> <input type ="text" id ="tokenEndpoint"><br>
+				Token Keys Endpoint:<br> <input type ="text" id ="tokenKeysEndpoint"><br>
 				Client ID:<br> <input type="text" id="clientId"><br>
 				Client Secret:<br> <input type="text" id="clientsecret"><br>
 				Scope:<br> <input type="text" id="scope"><br> 
@@ -69,111 +73,98 @@
 
 	</div>
 
-	<script>
-		// Get the modal
-		var modal = document.getElementById('myModal');
+<script>
 
-		// Get the button that opens the modal
-		var btn = document.getElementById("config");
+	var modal = document.getElementById('myModal');
+	
+	// Get the button that opens the modal
+	var btn = document.getElementById("config");
+	
+	// Get the <span> element that closes the modal
+	var span = document.getElementsByClassName("close")[0];
 
-		// Get the <span> element that closes the modal
-		var span = document.getElementsByClassName("close")[0];
+	// When the user clicks the button, open the modal 
+	btn.onclick = function() {
+		modal.style.display = "block";
+	}
 
-		// When the user clicks the button, open the modal 
-		btn.onclick = function() {
-			modal.style.display = "block";
-		}
+	// When the user clicks on <span> (x), close the modal
+	span.onclick = function() {
+		modal.style.display = "none";
+	}
 
-		// When the user clicks on <span> (x), close the modal
-		span.onclick = function() {
+	// When the user clicks anywhere outside of the modal, close it
+	window.onclick = function(event) {
+		if (event.target == modal) {
 			modal.style.display = "none";
 		}
+	}
 
-		// When the user clicks anywhere outside of the modal, close it
-		window.onclick = function(event) {
-			if (event.target == modal) {
-				modal.style.display = "none";
+	jQuery(document).ready(function($) {
+
+		$("#submit-form").submit(function(event) {
+
+			// Disble the search button
+			enableSubmitButton(false);
+
+			// Prevent the form from submitting via the browser.
+			event.preventDefault();
+
+			submitViaAjax();
+
+		});
+
+	});
+
+	function submitViaAjax() {
+
+		var dataString = {}
+		dataString["authorizationTokenEndpoint"]=$("#authorizationTokenEndpoint").val();
+		dataString["tokenEndpoint"]=$("#tokenEndpoint").val();
+		dataString["tokenKeysEndpoint"]=$("#tokenKeysEndpoint").val();
+		dataString["clientId"] = $("#clientId").val();
+		dataString["clientSecret"] = $("#clientsecret").val();
+		dataString["scope"] = $("#scope").val();
+		dataString["authorizationCodeFlow"] = $("#authorization_Code_Flow").val();
+		console.log(JSON.stringify(dataString));
+		$.ajax({
+			type : "POST",
+			 headers: { 
+			        'Accept': 'application/json',
+			        'Content-Type': 'application/json' 
+			    },
+			contentType : "application/json",
+			url : "${home}startOAuth",
+			data : JSON.stringify(dataString),
+			dataType : 'json',
+			timeout : 100000,
+			success : function(data) {
+				console.log("SUCCESS: ", data);
+				display(data);
+			},
+			error : function(e) {
+				console.log("ERROR: ", e);
+				display(e);
+			},
+			done : function(e) {
+				console.log("DONE");
+				enableSearchButton(true);
 			}
-		}
-	</script>
-	<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-	<script>
-		$(document)
-				.ready(
-						function() {
-							$("#submit")
-									.click(
-											function() {
-												var ClientId = $("#clientId")
-														.val();
-												var Clientsecret = $(
-														"#clientsecret").val();
-												var Scope = $("#scope").val();
-												var Authorization_Code_Flow = $(
-														"#Authorization_Code_Flow")
-														.val();
-												// Returns successful data submission
-												// message when the entered information
-												// is stored in database.
-												// alert("HERE");
-												/*var dataString = {
-													clientId : ClientId,
-													clientsecret : Clientsecret,
-													scope : Scope,
-													authorization_Code_Flow : Authorization_Code_Flow
-												}*/
-												
-												var dataString = {}
-												dataString["clientId"] = $("#clientId").val();
-												dataString["clientsecret"] = $("#clientsecret").val();
-												dataString["scope"] = $("#scope").val();
-												dataString["authorization_Code_Flow"] = $("#authorization_Code_Flow").val();
-												
-												console.log(dataString);
-												console.log(JSON.stringify(dataString));
-												console.log("dataString ="+ dataString);
-												console.log("dataStringJson"+ JSON.stringify(dataString));
-												if (ClientId == ''
-														|| Clientsecret == ''
-														|| Scope == ''
-														|| Authorization_Code_Flow == '') {
-													alert("Please Fill All Fields");
-												} else {
-													
-													console.log('${home}');
-													/*  $.post("${pageContext.request.contextPath}/startOAuth", function(){
-														
-													}).done(function(response) {
-														console.log(response);
-													}).fail(function(jqXHR, textStatus, errorThrown) {
-														console.log(jqXHR);
-														console.log(jqXHR.responseText);
-														console.log(textStatus);
-														console.log(errorThrown);
-													}); */ 
-													// AJAX Code To Submit Form.
-													$.ajax({
-																type : "POST",
-																url : "${home}startOAuth",
-																contentType : 'application/json;charset=utf-8',
-																dataType : 'json',
-																data : JSON.stringify(search),
-																cache : false,
-																success : function(result) {
-																	console.log("SUCCESS: ", result);
-																	alert(result);
-																},
-																error : function(jqXHR,textStatus,errorThrown) {
-																	//console.log("ERROR: ", errorThrown);
-																	console.log(textStatus);
-																	console.log(errorThrown);
-																}
-															}); 
-												}
-												return false;
-											});
-						});
-	</script>
+		});
+
+	}
+
+	function enableSubmitButton(flag) {
+		$("#btn-submit").prop("disabled", flag);
+	}
+
+	function display(data) {
+		var json = "<h4>Ajax Response</h4><pre>"
+				+ JSON.stringify(data, null, 4) + "</pre>";
+		$('#feedback').html(json);
+	}
+</script>
+
 	<%-- <script src="${pageContext.request.contextPath}/resources/core/js/jquery-3.2.1.min.js" type="text/javascript"></script>
 	<script src="<c:url value="/resources/core/js/init.js" />" type="text/javascript"></script> --%>
 </body>

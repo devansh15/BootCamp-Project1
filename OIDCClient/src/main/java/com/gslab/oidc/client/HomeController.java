@@ -59,8 +59,12 @@ public class HomeController {
 	@JsonView(Views.Public.class)
 	@RequestMapping(value = "/startOAuth", method=RequestMethod.POST , consumes={"application/json"})
 	public String authenticate(@RequestBody ClientRegistration clientRegistration, HttpSession session) throws ServletException, IOException {
-		System.out.println("HI am i being called");
+		/*System.out.println("HI am i being called");
 		System.out.println("hello java");
+		*/
+		System.out.println("Authorization Token Endpoint :" + clientRegistration.getAuthorizationTokenEndpoint());
+		System.out.println("Token Endpoint :" + clientRegistration.getTokenEndpoint());
+		System.out.println("Token Keys Endpoint :" + clientRegistration.getTokenKeysEndpoint());
 		System.out.println("Client Id : " + clientRegistration.getClientId());
 		System.out.println("Client secret : " + clientRegistration.getClientSecret());
 		System.out.println("Scope : " + clientRegistration.getScope());
@@ -68,13 +72,14 @@ public class HomeController {
 		
 		session.setAttribute(sessionStr, clientRegistration);
 		ClientRegistration cR = (ClientRegistration) session.getAttribute(sessionStr);
+		/*System.out.println(cR.getAuthorizationTokenEndpoint());
+		System.out.println(cR.getTokenEndpoint());
+		System.out.println(cR.getTokenKeysEndpoint());*/
 		System.out.println(cR.getClientId());
 		System.out.println(cR.getClientSecret());
 		System.out.println(cR.getScope());
 		System.out.println(cR.getAuthorizationCodeFlow());
-		//Store the above values in session
 
-		
 		//System.out.println("clientId" + request.getParameter("dataString"));
 		//System.out.println("client = "+clientRegistration.getClientId());
 		
@@ -136,11 +141,13 @@ public class HomeController {
 					
 					String[] idTokenFields = userIdToken.split("\\.");
 					byte[] idTokenHeaderBytes = idTokenFields[1].getBytes(); 
+					byte[] idTokenPayloadBytes = idTokenFields[2].getBytes();
 					// Decoding id_token.
 					System.out.println("ID Token header = " + new String(Base64.decodeBase64(idTokenHeaderBytes)));
+					System.out.println("ID Token Payload = " + new String(Base64.decodeBase64(idTokenPayloadBytes)));
 					//System.out.println("ID Token Payload = " + new String(Base64.decodeBase64(userIdToken.split("\\.")[1])));
 
-				} catch (JSONException e) {
+		} catch (JSONException e) {
 					e.printStackTrace();
 					throw new ServletException(e);
 				}
@@ -160,7 +167,7 @@ public class HomeController {
 				+ "Got access token: " + accessToken;
 	}
 
-	@RequestMapping(value = "/logout")
+	/*@RequestMapping(value = "/logout")
 	@ResponseBody
 	public String logout(HttpServletRequest request) {
 		HttpSession session = request.getSession();
@@ -169,9 +176,9 @@ public class HomeController {
 		session.removeAttribute(INSTANCE_URL);
 
 		return "logged out! <a href=\"/auth\">login</a>";
-	}
+	}*/
 
-	@RequestMapping(value = "/accounts")
+	/*@RequestMapping(value = "/accounts")
 	@ResponseBody
 	public String accounts(HttpServletRequest request) throws ServletException {
 		HttpSession session = request.getSession();
@@ -239,5 +246,5 @@ public class HomeController {
 
 		return writer.toString();
 	}
-
+*/
 }

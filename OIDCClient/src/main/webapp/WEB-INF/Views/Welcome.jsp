@@ -21,23 +21,39 @@
 		</div>
 	</div>
 </nav>
-
+<body>
 	<div class="container" style="min-height: 500px">
 	<button id="start">start</button>
 	<button id="config">config</button>
 	<div id="myModal" class="modal">
-	<br>
-	<br>
-	<br>
-	<br>
-	<br>
-	<br>
-	<br>
 		<div class="starter-template">
-		<h1>Client Registration Form</h1>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
 		<br>
 			<span class="close">&times;</span>
 			<form class="form-horizontal" id="submit-form" method ="post">
+				<div class="form-group form-group-lg">
+					<label class="col-sm-2 control-label">Authorization Token Endpoint:</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="authorizationTokenEndpoint">
+					</div>
+				</div>
+				<div class="form-group form-group-lg">
+					<label class="col-sm-2 control-label">Token Endpoint:</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="tokenEndpoint">
+					</div>
+				</div>
+				<div class="form-group form-group-lg">
+					<label class="col-sm-2 control-label">Token Keys Endpoint:</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="tokenKeysEndpoint">
+					</div>
+				</div>
 				<div class="form-group form-group-lg">
 					<label class="col-sm-2 control-label">Client ID:</label>
 					<div class="col-sm-10">
@@ -47,9 +63,10 @@
 				<div class="form-group form-group-lg">
 					<label class="col-sm-2 control-label">Client Secret:</label>
 					<div class="col-sm-10">
-						<input type="text" class="form-control" id="clientsecret">
+						<input type="text" class="form-control" id="clientSecret">
 					</div>
 				</div>
+				
 				<div class="form-group form-group-lg">
 					<label class="col-sm-2 control-label">Scope:</label>
 					<div class="col-sm-10">
@@ -71,7 +88,10 @@
 					</div>
 				</div>
 			</form>
-	
+			<!-- <form action ="/startOAuth" method="post">
+			<input id="submit" type="submit" value="Submit">
+			</form>
+	 -->
 		</div>
 	</div>
 
@@ -123,6 +143,9 @@
 	function submitViaAjax() {
 
 		var dataString = {}
+		dataString["authorizationTokenEndpoint"]=$("#authorizationTokenEndpoint").val();
+		dataString["tokenEndpoint"]=$("#tokenEndpoint").val();
+		dataString["tokenKeysEndpoint"]=$("#tokenKeysEndpoint").val();
 		dataString["clientId"] = $("#clientId").val();
 		dataString["clientSecret"] = $("#clientsecret").val();
 		dataString["scope"] = $("#scope").val();
