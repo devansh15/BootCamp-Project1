@@ -85,7 +85,6 @@ public class HomeController {
 		
 	/*	
 		String accessToken = (String) request.getSession().getAttribute(ACCESS_TOKEN);
-
 		if (accessToken == null) {*/
 
 			try {
@@ -171,10 +170,8 @@ public class HomeController {
 	@ResponseBody
 	public String logout(HttpServletRequest request) {
 		HttpSession session = request.getSession();
-
 		session.removeAttribute(ACCESS_TOKEN);
 		session.removeAttribute(INSTANCE_URL);
-
 		return "logged out! <a href=\"/auth\">login</a>";
 	}*/
 
@@ -182,31 +179,22 @@ public class HomeController {
 	@ResponseBody
 	public String accounts(HttpServletRequest request) throws ServletException {
 		HttpSession session = request.getSession();
-
 		String accessToken = (String) session.getAttribute(ACCESS_TOKEN);
 		String instanceUrl = (String) session.getAttribute(INSTANCE_URL);
-
 		if (accessToken == null) {
 			return "<a href=\"/logout\">Log out</a> | Error - no access token";
 		}
-
 		StringBuffer writer = new StringBuffer();
-
 		writer.append("We have an access token: " + accessToken + "<br />" + "Using instance " + instanceUrl
 				+ "<br /><br />");
-
 		HttpClient httpclient = new HttpClient();
 		GetMethod get = new GetMethod(instanceUrl + "/services/data/v20.0/query");
-
 		// set the token in the header
 		get.setRequestHeader("Authorization", "OAuth " + accessToken);
-
 		// set the SOQL as a query param
 		NameValuePair[] params = new NameValuePair[1];
-
 		params[0] = new NameValuePair("q", "SELECT Id, Name from Account LIMIT 100");
 		get.setQueryString(params);
-
 		try {
 			httpclient.executeMethod(get);
 			if (get.getStatusCode() == HttpStatus.SC_OK) {
@@ -216,11 +204,8 @@ public class HomeController {
 					JSONObject response = new JSONObject(
 							new JSONTokener(new InputStreamReader(get.getResponseBodyAsStream())));
 					System.out.println("Query response: " + response.toString(2));
-
 					writer.append(response.getString("totalSize") + " record(s) returned<br /><br />");
-
 					JSONArray results = response.getJSONArray("records");
-
 					for (int i = 0; i < results.length(); i++) {
 						writer.append(results.getJSONObject(i).getString("Id") + ", "
 								+ results.getJSONObject(i).getString("Name") + "<br />");
@@ -243,7 +228,6 @@ public class HomeController {
 		} finally {
 			get.releaseConnection();
 		}
-
 		return writer.toString();
 	}
 */
